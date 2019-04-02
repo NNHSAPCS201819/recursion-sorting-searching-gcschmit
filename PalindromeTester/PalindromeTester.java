@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 /**
  * Demonstrates the use of nested while loops.
@@ -11,31 +13,48 @@ public class PalindromeTester
      * Tests strings to see if they are palindromes.
      *
      */
-    public static void main (String[] args)
+    public static void main (String[] args) throws FileNotFoundException
     {
-        String str, another = "y";
-        int left, right;
-        Scanner s = new Scanner(System.in);
-
-        do
+        String str = "";
+        String fileName = "palindrome.txt";
+        
+        // read from the specified file
+        if(args.length > 0)
         {
-            System.out.println ("Enter a potential palindrome:");
-            str = s.nextLine();
-
-            if(isPalindrome(str))
-            {
-                System.out.println ("That string IS a palindrome.");
-            }
-            else
-            {
-                System.out.println ("That string is NOT a palindrome.");
-            }
-            
-            System.out.println();
-            System.out.print ("Test another palindrome (y/n)? ");
-            another = s.nextLine();
+            fileName = args[0];
         }
-        while (another.equalsIgnoreCase("y")); // allows y or Y
+        
+        // open the specified file for reading;
+        //  throws an exception if not found
+        File inputFile = new File(fileName);
+        Scanner s = new Scanner(inputFile);
+        
+        // make everything that isn't a letter, a delimiter
+        s.useDelimiter("[^A-Za-z]+");
+        
+        // read every token (word) in the file and concatenate it
+        while(s.hasNext())
+        {
+            str += s.next();
+        }
+        
+        // close the Scanner object to indicate we are done reading 
+        //      from the file
+        s.close();
+        
+        // make the entire string lowercase
+        str = str.toLowerCase();
+        
+        System.out.println(str);
+        
+        if(isPalindrome(str))
+        {
+            System.out.println ("That string IS a palindrome.");
+        }
+        else
+        {
+            System.out.println ("That string is NOT a palindrome.");
+        }
     }
     
     public static boolean isPalindrome(String str)
